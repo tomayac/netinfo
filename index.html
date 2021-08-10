@@ -51,6 +51,12 @@
         status: "Request-for-Comments",
         publisher: "IETF",
       },
+      "SAVE-DATA": {
+        title: "Save Data API",
+        href: "https://wicg.github.io/savedata/",
+        status: "CG-Draft",
+        publisher: "WICG",
+      }
     },
     mdn: true,
   };
@@ -83,15 +89,16 @@ in a meaningful and privacy-preserving way.
 
 ### Distinction from the save data use case
 
-Getting information about the network connection is not to be treated as equivalent to a necessary desire to save data.
+Getting information about the <dfn>network connection</dfn> is not to be treated as equivalent to a necessary desire to save data.
 For example, a web application that downloads data via the BitTorrent protocol may voluntarily want to limit itself to
-only a percentage of the available bandwidth.
+only a percentage of the available bandwidth as to not block other browsing activity, but the objective is not saving data.
+The save data use case is described in [[SAVE-DATA]].
 
 ## Definitions
 
 ### Metered connection
 
-A <cite>metered connection</cite> is an Internet connection that has a data limit associated with it. Examples include
+A <dfn>metered connection</dfn> is an Internet connection that has a data limit associated with it. Examples include
 mobile data
 plans with a certain amount of included data,
 but also ad-hoc hotel Wi-Fi access, or even certain home Internet data plans. Once the data limit is reached, the
@@ -101,23 +108,151 @@ or continuous data usage is charged at an additional (commonly high) cost.
 It is typically the desire of the user to remain within the caps of the data plan, and not be charged for data usage
 above the cap.
 
-### Effective connection type
+### Sustained connection speed
 
-The <cite>effective connection type</cite> is a numerical means to express what kind of transfers the current
+The <dfn>sustained connection speed</dfn> is a numerical means to express what kind of transfers the current
 connection is suitable for. [Nielsen's Law of Internet Bandwidth](https://www.nngroup.com/articles/law-of-bandwidth/)
 has shown that users'
 bandwidth grows by 50% per year. Therefore, rather than use fixed speed labels like 3G, 4G, or 5G (that might be based
 on theoretically technically possible maximum bandwidth or field-measured actual bandwidth) or meaningless
 labels like Wi-Fi, the <cite>Network Information API</cite>
-uses open-ended bandwidth ranges to express the effective connection type.
-These ranges are measured in bit per second (bit/s) and can be used in conjunction with SI prefixes (e.g.,
+uses open-ended bandwidth ranges to express the sustained connection speed.
+These ranges are measured in <dfn data-lt="BitPerSecond">bit per second</dfn> (bit/s) and can be used in
+conjunction with SI prefixes (e.g.,
 1&nbsp;kbit/s&nbsp;=&nbsp;1,000&nbsp;bit/s,
 1&nbsp;Mbit/s&nbsp;=&nbsp;1,000&nbsp;kbit/s, 1&nbsp;Gbit/s&nbsp;=&nbsp;1,000&nbsp;Mbit/s, or
 1&nbsp;Tbit/s&nbsp;=&nbsp;1,000&nbsp;Gbit/s).
 For example, 4K&nbsp;video commonly requires 20&nbsp;Mbp/s sustained speed according to the popular streaming service
 [YouTube](https://support.google.com/youtube/answer/78358?hl=en).
+The means through which the sustained connection speed is realized (e.g., via a Wi-Fi or an ethernet connection) is not
+exposed.
 
+## The <dfn>NavigatorNetworkInformation</dfn> interface
 
+The <code><dfn data-cite="!HTML#navigator">Navigator</dfn></code> and
+<code><dfn data-cite="!HTML#workernavigator">WorkerNavigator</dfn></code> interface expose access to the
+<a>NetworkInformation</a> interface by mixing in <a>NavigatorNetworkInformation</a>.
+
+<pre class="idl">
+  interface mixin NavigatorNetworkInformation {
+    [SameObject] readonly attribute NetworkInformation connection;
+  };
+
+  Navigator includes NavigatorNetworkInformation;
+  WorkerNavigator includes NavigatorNetworkInformation;
+</pre>
+
+<section data-dfn-for="NavigatorNetworkInformation" data-link-for="NavigatorNetworkInformation">
+  ### The <code><dfn>connection</dfn></code> attribute
+
+  The <a>connection</a> attribute, when getting, returns an object that implements the <a>NetworkInformation</a>
+  interface.
+</section>
+
+<section data-dfn-for="NetworkInformation" data-link-for="NetworkInformation">
+  ## The <dfn>NetworkInformation</dfn> interface
+
+  The <a>NetworkInformation</a> interface provides a means to access information about the network connection the user
+  agent is currently using. The <code><dfn data-cite="DOM#interface-eventtarget">EventTarget</dfn></code> is defined in
+  [[!DOM]].
+
+  <pre class="idl">
+  [Exposed=(Window,Worker)]
+  interface NetworkInformation : EventTarget {
+    readonly attribute boolean isMetered;
+    readonly attribute BitPerSecond sustainedSpeed;
+    attribute EventHandler onchange;
+  };
+
+  typedef unrestricted double BitPerSecond;
+  </pre>
+
+  ### The <dfn>isMetered</dfn> attribute
+
+  The <a>isMetered</a> attribute, when getting, returns whether the connection that the the user agent is using is a
+  <a>metered connection</a>. This information is commonly known to the operating system and relayed to the user agent as is.
+
+  #### The <code><dfn>Sec-CH-Metered-Connection</dfn></code> request header field
+
+  The <a>`Sec-CH-Metered-Connection`</a> request header field is a boolean that indicates whether the connection that the  user agent is using is a
+  <a>metered connection</a> at the time when the request is made by the user agent.
+  It is a Structured Header whose value must be a Boolean. [[STRUCTURED-HEADERS]]
+
+  ### The <dfn>sustainedSpeed</dfn> attribute
+
+  The <a>sustainedSpeed</a> attribute, when getting, returns the <a>sustained connection speed</a> in <a>bit per
+    second</a> that is determined by the user agent using a combination of recently observed <dfn>round trip time</dfn>
+  and <dfn>downlink</dfn> values. This information is commonly known to the operating system and relayed to the user agent as is.
+
+  #### The <code><dfn>Sec-CH-Sustained-Speed</dfn></code> request header field
+
+  The <a>`Sec-CH-Sustained-Speed`</a> request header field is a token that indicates the <a>sustainedSpeed</a> at the time when the request is made by the user agent.
+  It is a Structured Header whose value must be a Token. [[STRUCTURED-HEADERS]]
+
+  ### The <dfn>onchange</dfn> attribute
+
+  The <a>onchange</a> event handler attribute handles "change" events fired during the <a>steps to update the connection values</a>.
+
+</section>
+
+<section data-link-for="NetworkInformation">
+  ## Handling changes to the underlying connection
+
+  When the properties of the <a>network connection</a> change, the user agent MUST run the <dfn>steps to update the connection values</dfn>:
+
+  1. ToDo.
+</section>
+
+<section>
+  ## Privacy Considerations
+
+  ToDo
+</section>
+
+<section class="informative">
+  ## Examples of usage
+
+  ### Downloading non-essential content
+
+  <pre class="example js">
+    let nonEssentialContentLoaded = false;
+
+    async function downloadNonEssentialContent() {
+      if (nonEssentialContentLoaded) {
+        return;
+      }
+      if (!navigator.connection.isMetered) {
+        await fetch('https://example.com/non-essential-content/');
+        nonEssentialContentLoaded = true;
+      }
+    }
+
+    if (!navigator.connection.isMetered) {
+      downloadNonEssentialContent();
+    }
+
+    navigator.connection.addEventListener('change', downloadNonEssentialContent);
+  </pre>
+
+  ### Limiting bandwidth usage
+
+  <pre class="example js">
+    const initialSustainedSpeedInBytes = navigator.connection.sustainedSpeed / 8;
+
+    // https://github.com/webtorrent/webtorrent/blob/master/docs/api.md#client--new-webtorrentopts
+    const client = new WebTorrent({
+      // Max 50% of the available bandwidth.
+      downLimit = 0.5 * initialSustainedSpeedInBytes,
+    });
+
+    navigator.connection.addEventListener('change', (event) => {
+      const currentSustainedSpeedInBytes = event.connection.sustainedSpeed / 8;
+      // https://github.com/webtorrent/webtorrent/blob/master/docs/api.md#clientthrottledownloadrate
+      client.throttleDownload(0.5 * currentSustainedSpeedInBytes);
+    });
+  </pre>
+
+</section>
 
 <section id="conformance">
   There is only one class of product that can claim conformance to this
@@ -126,5 +261,4 @@ For example, 4K&nbsp;video commonly requires 20&nbsp;Mbp/s sustained speed accor
 
 <section class="appendix">
   ## Acknowledgments
-
 </section>
