@@ -99,8 +99,8 @@ activity, but the objective is not saving data. The save data use case is descri
 
 The save data use case is dealt with
 in the [Save Data API](https://wicg.github.io/savedata/) spec. Web developers can also make use of the [`prefers-reduced-data`](https://www.w3.org/TR/mediaqueries-5/#prefers-reduced-data)
-user preference media feature in CSS (`@media (prefers-reduced-data: reduce) { /* … */ }`) or JavaScript
-(`if (window.matchMedia('(prefers-reduced-data: reduce)').matches) { /* … */ }`). [[MEDIA-QUERIES]]
+user preference media feature in CSS (`@media (prefers-reduced-data: reduce) { /*…*/ }`) or JavaScript
+(`if (window.matchMedia('(prefers-reduced-data: reduce)').matches) { /*…*/ }`). [[MEDIA-QUERIES]]
 
 <h2>Definitions</h2>
 
@@ -177,8 +177,11 @@ interface expose access to the <a>NetworkInformation</a> interface by mixing in
 
   The <a>isMetered</a> attribute, when getting, returns
   whether the connection that the the user agent is using is a <a>metered connection</a>. This
-  information is commonly known to the operating system and relayed to the user agent as is. <h3>#
-  The <code><dfn>Sec-CH-Metered-Connection</dfn></code> request header field The
+  information is commonly known to the operating system and relayed to the user agent as is.
+
+  <h4>The <code><dfn>Sec-CH-Metered-Connection</dfn></code> request header field</h4>
+
+  The
   <a>`Sec-CH-Metered-Connection`</a> request header field is a boolean that indicates whether the
   connection that the user agent is using is a <a>metered connection</a> at the time when the
   request is made by the user agent. It is a Structured Header whose value must be a Boolean.
