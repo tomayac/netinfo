@@ -55,6 +55,18 @@ sustained connection speed is realized (e.g., via a Wi-Fi or an ethernet connect
 
 ## Origin of the data
 
+### Metered connections
+
+Some operating systems let the user declare
+
+- Windows metered connection:
+
+  <img src="windows_metered.png" alt="Windows network settings with the 'metered connection' switch toggled on." width="700" />
+
+- Android metered connection:
+
+  <img src="android_metered.png" alt="Android network settings with the 'Network usage' setting set to 'Treat as metered'." width="350" />
+
 ### Network statistics
 
 Operating systems like Windows or macOS make realtime network statistics available in their _Task
