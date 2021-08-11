@@ -64,8 +64,14 @@ exposed.
 Operating systems like Windows or macOS make realtime network statistics available in their _Task Manager_ respectively their _Activity Monitor_ apps.
 On the command line, many operating systems offer the [`nettop`](https://github.com/Emanem/nettop) tool or other means to obtain network statistics.
 
-<img src="task_manager.png" alt="Task Manager on Windows." width="700" />
+- The Windows _Task Manager_:
 
-<img src="activity_monitor.png" alt="Activity Monitor on macOS." width="700" />
+  <img src="task_manager.png" alt="Task Manager on Windows." width="700" />
 
-<img src="nettop.png" alt="nettop on the macOS command line." width="700" />
+- The macOS _Activity Monitor_:
+
+  <img src="activity_monitor.png" alt="Activity Monitor on macOS." width="700" />
+
+- The `nettop` tool:
+
+  <img src="nettop.png" alt="nettop on the macOS command line." width="700" />
