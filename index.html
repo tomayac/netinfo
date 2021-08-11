@@ -57,6 +57,12 @@
         status: 'CG-Draft',
         publisher: 'WICG',
       },
+      'MEDIA-QUERIES': {
+        title: 'Media Queries Level 5',
+        href: 'https://www.w3.org/TR/mediaqueries-5/',
+        status: 'WG-Draft',
+        publisher: 'W3C',
+      }
     },
     mdn: true,
   };
@@ -69,7 +75,9 @@
 
 <section id="sotd"></section>
 
-## Introduction and background More and more devices are permanently connected to the Internet, and
+<h2>Introduction and background</h2>
+
+More and more devices are permanently connected to the Internet, and
 connectivity is a fundamental requirement for many. Network connectivity depends on a lot of
 factors, some of which include the connection type (e.g., Wi-Fi, 3G, 4G, 5G, etc.), but also factors
 like the device's physical location (e.g., Wi-Fi on a moving train), or the user's preferences
@@ -78,18 +86,36 @@ like the device's physical location (e.g., Wi-Fi on a moving train), or the user
 "connected to cellular always means connectivity is spotty and data is expensive" no longer hold
 true, and in many cases never did. The <cite>Network Information API</cite> aims to provide a
 standard approach for web applications to query the current network status in a meaningful and
-privacy-preserving way. ### Distinction from the save data use case Getting information about the
+privacy-preserving way.
+
+<h3>Distinction from the save data use case</h3>
+
+Getting information about the
 <dfn>network connection</dfn> is not to be treated as equivalent to a necessary desire to save data.
 For example, a web application that downloads data via the BitTorrent protocol may voluntarily want
 to limit itself to only a percentage of the available bandwidth as to not block other browsing
 activity, but the objective is not saving data. The save data use case is described in
-[[SAVE-DATA]]. ## Definitions ### Metered connection A <dfn>metered connection</dfn> is an Internet
+[[SAVE-DATA]].
+
+The save data use case is dealt with
+in the [Save Data API](https://wicg.github.io/savedata/) spec. Web developers can also make use of the [`prefers-reduced-data`](https://www.w3.org/TR/mediaqueries-5/#prefers-reduced-data)
+user preference media feature in CSS (`@media (prefers-reduced-data: reduce) { /* … */ }`) or JavaScript
+(`if (window.matchMedia('(prefers-reduced-data: reduce)').matches) { /* … */ }`). [[MEDIA-QUERIES]]
+
+<h2>Definitions</h2>
+
+<h3>Metered connection</h3>
+
+  A <dfn>metered connection</dfn> is an Internet
 connection that has a data limit associated with it. Examples include mobile data plans with a
 certain amount of included data, but also ad-hoc hotel Wi-Fi access, or even certain home Internet
 data plans. Once the data limit is reached, the connection is interrupted, or continuous data usage
 is charged at an additional (commonly high) cost. It is typically the desire of the user to remain
-within the caps of the data plan, and not be charged for data usage above the cap. ### Sustained
-connection speed The <dfn>sustained connection speed</dfn> is a numerical means to express what kind
+within the caps of the data plan, and not be charged for data usage above the cap.
+
+<h3>Sustained connection speed</h3>
+
+The <dfn>sustained connection speed</dfn> is a numerical means to express what kind
 of transfers the current connection is suitable for. [Nielsen's Law of Internet
 Bandwidth](https://www.nngroup.com/articles/law-of-bandwidth/) has shown that users' bandwidth grows
 by 50% per year. Therefore, rather than use fixed speed labels like 3G, 4G, or 5G (that might be
@@ -103,7 +129,10 @@ prefixes (e.g., 1&nbsp;kbit/s&nbsp;=&nbsp;1,000&nbsp;bit/s,
 20&nbsp;Mbp/s sustained speed according to the popular streaming service
 [YouTube](https://support.google.com/youtube/answer/78358?hl=en). The means through which the
 sustained connection speed is realized (e.g., via a Wi-Fi or an ethernet connection) is not exposed.
-## The <dfn>NavigatorNetworkInformation</dfn> interface The
+
+<h3>The <dfn>NavigatorNetworkInformation</dfn> interface</h3>
+
+  The
 <code><dfn data-cite="!HTML#navigator">Navigator</dfn></code> and
 <code><dfn data-cite="!HTML#workernavigator">WorkerNavigator</dfn></code>
 interface expose access to the <a>NetworkInformation</a> interface by mixing in
@@ -119,13 +148,17 @@ interface expose access to the <a>NetworkInformation</a> interface by mixing in
 </pre>
 
 <section data-dfn-for="NavigatorNetworkInformation" data-link-for="NavigatorNetworkInformation">
-  ### The <code><dfn>connection</dfn></code> attribute The <a>connection</a> attribute, when
+  <h3>The <code><dfn>connection</dfn></code> attribute</h3>
+
+  The <a>connection</a> attribute, when
   getting, returns an object that implements the <a>NetworkInformation</a>
   interface.
 </section>
 
 <section data-dfn-for="NetworkInformation" data-link-for="NetworkInformation">
-  ## The <dfn>NetworkInformation</dfn> interface The <a>NetworkInformation</a> interface provides a
+  <h2> The <dfn>NetworkInformation</dfn> interface</h2>
+
+  The <a>NetworkInformation</a> interface provides a
   means to access information about the network connection the user agent is currently using. The
   <code><dfn data-cite="DOM#interface-eventtarget">EventTarget</dfn></code> is defined in [[!DOM]].
 
@@ -140,36 +173,56 @@ interface expose access to the <a>NetworkInformation</a> interface by mixing in
   typedef unrestricted double BitPerSecond;
   </pre>
 
-  ### The <dfn>isMetered</dfn> attribute The <a>isMetered</a> attribute, when getting, returns
+  <h3>The <dfn>isMetered</dfn> attribute</h3>
+
+  The <a>isMetered</a> attribute, when getting, returns
   whether the connection that the the user agent is using is a <a>metered connection</a>. This
-  information is commonly known to the operating system and relayed to the user agent as is. ####
+  information is commonly known to the operating system and relayed to the user agent as is. <h3>#
   The <code><dfn>Sec-CH-Metered-Connection</dfn></code> request header field The
   <a>`Sec-CH-Metered-Connection`</a> request header field is a boolean that indicates whether the
   connection that the user agent is using is a <a>metered connection</a> at the time when the
   request is made by the user agent. It is a Structured Header whose value must be a Boolean.
-  [[STRUCTURED-HEADERS]] ### The <dfn>sustainedSpeed</dfn> attribute The
+  [[STRUCTURED-HEADERS]]
+
+  <h3>The <dfn>sustainedSpeed</dfn> attribute</h3>
+
+  The
   <a>sustainedSpeed</a> attribute, when getting, returns the <a>sustained connection speed</a> in
   <a>bit per second</a> that is determined by the user agent using a combination of recently
   observed <dfn>round trip time</dfn> and <dfn>downlink</dfn> values. This information is commonly
-  known to the operating system and relayed to the user agent as is. #### The
-  <code><dfn>Sec-CH-Sustained-Speed</dfn></code> request header field The
+  known to the operating system and relayed to the user agent as is.
+
+  <h4>The <code><dfn>Sec-CH-Sustained-Speed</dfn></code> request header field</h4>
+
+  The
   <a>`Sec-CH-Sustained-Speed`</a> request header field is a token that indicates the
   <a>sustainedSpeed</a> at the time when the request is made by the user agent. It is a Structured
-  Header whose value must be a Token. [[STRUCTURED-HEADERS]] ### The <dfn>onchange</dfn> attribute
+  Header whose value must be a Token. [[STRUCTURED-HEADERS]]
+
+  <h3>The <dfn>onchange</dfn> attribute</h3>
+
   The <a>onchange</a> event handler attribute handles "change" events fired during the
   <a>steps to update the connection values</a>.
 </section>
 
 <section data-link-for="NetworkInformation">
-  ## Handling changes to the underlying connection When the properties of the
+  <h2> Handling changes to the underlying connection</h2>
+
+  When the properties of the
   <a>network connection</a> change, the user agent MUST run the
-  <dfn>steps to update the connection values</dfn>: 1. ToDo.
+  <dfn>steps to update the connection values</dfn>:
+
+  1. ToDo.
 </section>
 
-<section>## Privacy Considerations ToDo</section>
+<section>
+  <h2> Privacy Considerations ToDo</h2>
+</section>
 
 <section class="informative">
-  ## Examples of usage ### Downloading non-essential content
+  <h2> Examples of usage</h2>
+
+  <h3> Downloading non-essential content
 
   <pre class="example js">
     let nonEssentialContentLoaded = false;
@@ -191,7 +244,7 @@ interface expose access to the <a>NetworkInformation</a> interface by mixing in
     navigator.connection.addEventListener('change', downloadNonEssentialContent);
   </pre>
 
-  ### Limiting bandwidth usage
+  <h3> Limiting bandwidth usage</h3>
 
   <pre class="example js">
     const initialSustainedSpeedInBytes = navigator.connection.sustainedSpeed / 8;
@@ -215,4 +268,4 @@ interface expose access to the <a>NetworkInformation</a> interface by mixing in
   <dfn>user agent</dfn>.
 </section>
 
-<section class="appendix">## Acknowledgments</section>
+<section class="appendix"><h2> Acknowledgments</section>

@@ -22,8 +22,13 @@ current network status in a meaningful and privacy-preserving way.
 Getting information about the network connection is not to be treated as equivalent to a necessary
 desire to save data. For example, a web application that downloads data via the BitTorrent protocol
 may voluntarily want to limit itself to only a percentage of the available bandwidth as to not block
-other browsing activity, but the objective is not saving data. The save data use case is described
-in the [Save Data API](https://wicg.github.io/savedata/) spec.
+other browsing activity, but the objective is not saving data.
+
+The save data use case is dealt with in the [Save Data API](https://wicg.github.io/savedata/) spec.
+Web developers can also make use of the
+[`prefers-reduced-data`](https://www.w3.org/TR/mediaqueries-5/#prefers-reduced-data) user preference
+media feature in CSS (`@media (prefers-reduced-data: reduce) { /* … */ }`) or JavaScript
+(`if (window.matchMedia('(prefers-reduced-data: reduce)').matches) { /* … */ }`).
 
 ## Definitions
 
