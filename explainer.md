@@ -57,7 +57,8 @@ sustained connection speed is realized (e.g., via a Wi-Fi or an ethernet connect
 
 ### Metered connections
 
-Some operating systems let the user declare
+Some operating systems let the user declare certain networks as metered networks, which typically
+disables features like syncing or automatic updates.
 
 - Windows metered connection:
 
