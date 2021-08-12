@@ -91,3 +91,75 @@ statistics.
 - The `nettop` tool:
 
   <img src="nettop.png" alt="nettop on the macOS command line." width="700" />
+
+## Examples
+
+### Downloading non-essential content
+
+```js
+let nonEssentialContentLoaded = false;
+
+async function downloadNonEssentialContent() {
+  if (nonEssentialContentLoaded) {
+    return;
+  }
+  if (!navigator.connection.isMetered) {
+    await fetch('https://example.com/non-essential-content/');
+    nonEssentialContentLoaded = true;
+  }
+}
+
+if (!navigator.connection.isMetered) {
+  downloadNonEssentialContent();
+}
+
+navigator.connection.addEventListener('change', downloadNonEssentialContent);
+```
+
+### Limiting bandwidth usage
+
+```js
+const initialSustainedSpeedInBytes = navigator.connection.sustainedSpeed / 8;
+
+// https://github.com/webtorrent/webtorrent/blob/master/docs/api.md#client--new-webtorrentopts
+const client = new WebTorrent({
+  // Max 50% of the available bandwidth.
+  downLimit = 0.5 * initialSustainedSpeedInBytes,
+});
+
+navigator.connection.addEventListener('change', (event) => {
+  const currentSustainedSpeedInBytes = event.connection.sustainedSpeed / 8;
+  // https://github.com/webtorrent/webtorrent/blob/master/docs/api.md#clientthrottledownloadrate
+  client.throttleDownload(0.5 * currentSustainedSpeedInBytes);
+});
+```
+
+### Adaptive loading based on client hints
+
+1. The client makes an initial request to the server.
+   ```bash
+   GET / HTTP/1.1
+   Host: example.com
+   ```
+1. The server responds, telling the client via `Accept-CH` that it accepts the
+   `Sec-CH-Metered-Connection` and the `Sec-CH-Sustained-Speed` client hints, and that it also
+   varies the response on the former, as conveyed by `Vary`.
+   ```bash
+   HTTP/1.1 200 OK
+   Content-Type: text/html
+   Accept-CH: Sec-CH-Metered-Connection, Sec-CH-Sustained-Speed
+   Vary: Sec-CH-Metered-Connection
+   ```
+1. The client then later makes a follow-up request for `/list-of-products`, telling the server via
+   `Sec-CH-Metered-Connection` that it is on a metered connection and via `Sec-CH-Sustained-Speed`
+   that its sustained speed is in the bucket of 50,000,000 bps (50 Mbps).
+   ```bash
+   GET /list-of-products HTTP/1.1
+   Host: example.com
+   Sec-CH-Metered-Connection: 1
+   Sec-CH-Sustained-Speed: 50000000
+   ```
+1. The server can then tailor the response to the client's preferences accordingly and, respecting
+   the metered connection, for example, choose to not return all possible products, but just a
+   subset. Since the connection speed permits it, the server can choose to include product videos in
+   the response, but not autoplay them, because the connection is metered.
