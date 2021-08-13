@@ -136,7 +136,7 @@ exposed.
 
 ## Use cases
 
-Depending on the dynamic network connection information, sites can:
+Depending on the dynamically obtained network connection information, pages can:
 
 - Instead of Retina resolution images use "regular" resolution images.
 - Reduce the quality of lossy compressed images.
@@ -146,8 +146,7 @@ Depending on the dynamic network connection information, sites can:
 
 ## The <dfn>NavigatorNetworkInformation</dfn> interface
 
-The
-<code><dfn data-cite="!HTML#navigator">Navigator</dfn></code> and
+The <code><dfn data-cite="!HTML#navigator">Navigator</dfn></code> and
 <code><dfn data-cite="!HTML#workernavigator">WorkerNavigator</dfn></code>
 interface expose access to the <a>NetworkInformation</a> interface by mixing in
 <a>NavigatorNetworkInformation</a>.
@@ -189,29 +188,29 @@ network connection the user agent is currently using. The
 
 The <a>isMetered</a> attribute, when getting, returns whether the connection that the the user
 agent is using is a <a>metered connection</a>. This information is commonly known to the
-operating system and relayed to the user agent as is.
+operating system and can be relayed to the user agent as is.
+User agents may offer an override mechanism at their own discretion.
 
 #### The <code><dfn>Sec-CH-Metered-Connection</dfn></code> request header field
 
-The
-<a><code>Sec-CH-Metered-Connection</code></a> request header field is a boolean that indicates whether
+The <a><code>Sec-CH-Metered-Connection</code></a> request header field is a boolean that indicates whether
 the connection that the user agent is using is a <a>metered connection</a> at the time when
 the request is made by the user agent. It is a Structured Header whose value must be a
 Boolean. [[STRUCTURED-HEADERS]]
 
 ### The <dfn><code>sustainedSpeed</code></dfn> attribute
 
-The
-<a>sustainedSpeed</a> attribute, when getting, returns the
+The <a>sustainedSpeed</a> attribute, when getting, returns the
 <a>sustained connection speed</a> in <a>bit per second</a> that is determined by the user
 agent using a combination of recently observed <dfn>round trip time</dfn> and
 <dfn>downlink</dfn> values. This information is commonly known to the operating system and
-relayed to the user agent as is.
+can be relayed to the user agent as is. User agents can, at their own discretion, look back at a
+sliding window of recent observations and put the observed connection speeds in buckets of
+exponentially growing size of bits per second ranges.
 
 #### The <code><dfn>Sec-CH-Sustained-Speed</dfn></code> request header field
 
-The
-<a><code>Sec-CH-Sustained-Speed</code></a> request header field is a token that indicates the
+The <a><code>Sec-CH-Sustained-Speed</code></a> request header field is a token that indicates the
 <a>sustainedSpeed</a> at the time when the request is made by the user agent. It is a
 Structured Header whose value must be a Token. [[STRUCTURED-HEADERS]]
 
@@ -226,11 +225,29 @@ When the properties of the
 <a>network connection</a> change, the user agent MUST run the
 <dfn>steps to update the connection values</dfn>:
 
-1. ToDo.
+  1. Let <var>new-metered</var> be the new <a>metered connection</a> value.
+  1. Let <var>new-sustained-speed</var> be the new bucket for the new <a>sustained connection speed</a>.
+  1. If <var>new-metered</var> is different from the previous `connection.metered` value,
+     or if <var>new-sustained-speed</var> is in a different bucket than `connection.sustainedSpeed`:
+     1. Using the <a data-cite="!HTML#networking-task-source">networking task source</a>, <a data-cite="!HTML#queue-a-task">queue a task</a> to perform the following:
+        1. Set `connection.isMetered` to <var>new-metered</var>.
+        1. Set `connection.sustainedSpeed` to <var>new-sustained-speed</var>.
+        1. <a data-cite="!DOM#concept-event-fire">Fire an event</a> named `change` at the `NetworkInformation` object.
 
 ## Privacy Considerations
 
-ToDo
+Knowing whether a connection is metered adds a low entropy signal to the user agent.
+Since both mobile and desktop connections can be marked as metered, having this information
+is not enough to determine whether a user is on a cellular, Ethernet, or Wi-Fi connection.
+
+Pages can measure the sustained connection speed by requesting files of a known size from
+multiple remote servers and measuring the time until the downloads finish. The same information
+is made available in more granular form as buckets of exponentially growing size of bit per second ranges.
+User agents can size these buckets arbitrarily, or in the extreme case report infinity or zero.
+By making the sustained connection speed available at request time via client hint adds
+a low entropy signal to the user agent.
+
+The privacy considerations of [[CLIENT-HINTS]] likewise apply to the headers defined by this specification.
 
 ## Examples of usage
 

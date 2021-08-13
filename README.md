@@ -78,7 +78,8 @@ disables features like syncing or automatic updates.
 Operating systems like Windows or macOS make realtime network statistics available in their _Task
 Manager_ respectively their _Activity Monitor_ apps. On the command line, many operating systems
 offer the [`nettop`](https://github.com/Emanem/nettop) tool or other means to obtain network
-statistics.
+statistics. User agents can, at their own discretion, report these statistics in buckets of bit per
+second ranges.
 
 - The Windows _Task Manager_:
 
