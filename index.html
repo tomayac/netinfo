@@ -177,7 +177,7 @@ network connection the user agent is currently using. The
 <pre data-cite="HTML" class="idl">
   [Exposed=(Window,Worker)]
   interface NetworkInformation : EventTarget {
-    readonly attribute boolean isMetered;
+    readonly attribute boolean metered;
     readonly attribute BitPerSecond sustainedSpeed;
     attribute EventHandler onchange;
   };
@@ -185,9 +185,9 @@ network connection the user agent is currently using. The
   typedef unrestricted double BitPerSecond;
 </pre>
 
-### The <code><dfn>isMetered</dfn></code> attribute
+### The <code><dfn>metered</dfn></code> attribute
 
-The <a>isMetered</a> attribute, when getting, returns whether the connection that the the user
+The <a>metered</a> attribute, when getting, returns whether the connection that the the user
 agent is using is a <a>metered connection</a>. This information is commonly known to the
 operating system and can be relayed to the user agent as is.
 User agents may offer an override mechanism at their own discretion.
@@ -231,7 +231,7 @@ When the properties of the
   1. If <var>new-metered</var> is different from the previous `connection.metered` value,
      or if <var>new-sustained-speed</var> is in a different bucket than `connection.sustainedSpeed`:
      1. Using the <a data-cite="!HTML#networking-task-source">networking task source</a>, <a data-cite="!HTML#queue-a-task">queue a task</a> to perform the following:
-        1. Set `connection.isMetered` to <var>new-metered</var>.
+        1. Set `connection.metered` to <var>new-metered</var>.
         1. Set `connection.sustainedSpeed` to <var>new-sustained-speed</var>.
         1. <a data-cite="!DOM#concept-event-fire">Fire an event</a> named `change` at the `NetworkInformation` object.
 
@@ -262,13 +262,13 @@ The privacy considerations of [[CLIENT-HINTS]] likewise apply to the headers def
       if (nonEssentialContentLoaded) {
         return;
       }
-      if (!navigator.connection.isMetered) {
+      if (!navigator.connection.metered) {
         await fetch('https://example.com/non-essential-content/');
         nonEssentialContentLoaded = true;
       }
     }
 
-    if (!navigator.connection.isMetered) {
+    if (!navigator.connection.metered) {
       downloadNonEssentialContent();
     }
 

@@ -104,13 +104,13 @@ async function downloadNonEssentialContent() {
   if (nonEssentialContentLoaded) {
     return;
   }
-  if (!navigator.connection.isMetered) {
+  if (!navigator.connection.metered) {
     await fetch('https://example.com/non-essential-content/');
     nonEssentialContentLoaded = true;
   }
 }
 
-if (!navigator.connection.isMetered) {
+if (!navigator.connection.metered) {
   downloadNonEssentialContent();
 }
 
