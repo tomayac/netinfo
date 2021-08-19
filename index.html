@@ -126,7 +126,7 @@ grows by 50% per year. Therefore, rather than use fixed speed labels like 3G, 4G
 might be based on theoretically technically possible maximum bandwidth or field-measured actual
 bandwidth) or meaningless labels like Wi-Fi, the <cite>Network Information API</cite> uses
 open-ended bandwidth ranges to express the sustained connection speed. These ranges are measured
-in <dfn data-lt="BitPerSecond">bit per second</dfn> (bit/s) and can be used in conjunction with
+in <dfn data-lt="BitPerSecond"></dfn>bit per second</dfn> (bit/s) and can be used in conjunction with
 SI prefixes (e.g., 1&nbsp;kbit/s&nbsp;=&nbsp;1,000&nbsp;bit/s,
 1&nbsp;Mbit/s&nbsp;=&nbsp;1,000&nbsp;kbit/s, 1&nbsp;Gbit/s&nbsp;=&nbsp;1,000&nbsp;Mbit/s, or
 1&nbsp;Tbit/s&nbsp;=&nbsp;1,000&nbsp;Gbit/s). For example, 4K&nbsp;video commonly requires
@@ -178,11 +178,9 @@ network connection the user agent is currently using. The
   [Exposed=(Window,Worker)]
   interface NetworkInformation : EventTarget {
     readonly attribute boolean metered;
-    readonly attribute BitPerSecond sustainedSpeed;
+    readonly attribute unrestricted double sustainedSpeed;
     attribute EventHandler onchange;
   };
-
-  typedef unrestricted double BitPerSecond;
 </pre>
 
 ### The <code><dfn>metered</dfn></code> attribute
