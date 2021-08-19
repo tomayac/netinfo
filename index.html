@@ -91,19 +91,6 @@ true, and in many cases never did. The <cite>Network Information API</cite> aims
 standard approach for web applications to query the current network status in a meaningful and
 privacy-preserving way.
 
-### Distinction from the save data use case
-
-Getting information about the
-<dfn>network connection</dfn> is not to be treated as equivalent to a necessary desire to save
-data. For example, a web application that downloads data via the BitTorrent protocol may
-voluntarily want to limit itself to only a percentage of the available bandwidth as to not block
-other browsing activity, but the objective is not saving data. The save data use case is
-described in [[SAVE-DATA]]. Web developers can also make use of the
-[<code>prefers-reduced-data</code>](https://www.w3.org/TR/mediaqueries-5/#prefers-reduced-data) user
-preference media feature in CSS (<code>@media (prefers-reduced-data: reduce) { /*…*/ }</code>) or
-JavaScript (<code>if (window.matchMedia('(prefers-reduced-data: reduce)').matches) { /*…*/ }</code>).
-[[MEDIA-QUERIES]]
-
 ## Definitions
 
 ### Metered connection
@@ -126,7 +113,7 @@ grows by 50% per year. Therefore, rather than use fixed speed labels like 3G, 4G
 might be based on theoretically technically possible maximum bandwidth or field-measured actual
 bandwidth) or meaningless labels like Wi-Fi, the <cite>Network Information API</cite> uses
 open-ended bandwidth ranges to express the sustained connection speed. These ranges are measured
-in <dfn data-lt="BitPerSecond"></dfn>bit per second</dfn> (bit/s) and can be used in conjunction with
+in bit per second (bit/s) and can be used in conjunction with
 SI prefixes (e.g., 1&nbsp;kbit/s&nbsp;=&nbsp;1,000&nbsp;bit/s,
 1&nbsp;Mbit/s&nbsp;=&nbsp;1,000&nbsp;kbit/s, 1&nbsp;Gbit/s&nbsp;=&nbsp;1,000&nbsp;Mbit/s, or
 1&nbsp;Tbit/s&nbsp;=&nbsp;1,000&nbsp;Gbit/s). For example, 4K&nbsp;video commonly requires
@@ -144,6 +131,24 @@ Depending on the dynamically obtained network connection information, pages can:
 - Disable autoplay for foreground videos.
 - Replace background videos with poster images.
 - Request fewer or more results from a search API.
+
+### Distinction from the save data use case
+
+Getting information about the
+<dfn>network connection</dfn> is not to be treated as equivalent to a necessary desire to save
+data. For example, a web application that downloads data via the BitTorrent protocol may
+voluntarily want to limit itself to only a percentage of the available bandwidth as to not block
+other browsing activity, but the objective is not saving data. The save data use case is
+described in [[SAVE-DATA]]. Web developers can also make use of the
+[<code>prefers-reduced-data</code>](https://www.w3.org/TR/mediaqueries-5/#prefers-reduced-data) user
+preference media feature in CSS (<code>@media (prefers-reduced-data: reduce) { /*…*/ }</code>) or
+JavaScript (<code>if (window.matchMedia('(prefers-reduced-data: reduce)').matches) { /*…*/ }</code>).
+[[MEDIA-QUERIES]]
+
+As another example, on a metered connection a hypothetical podcast application would not synchronize new podcasts
+for offline use, but downloading high quality image resources for illustrating each podcast would
+be acceptable. With save data, a hypothetical podcast app would likewise not synchronize new podcasts,
+but could even go as far as defaulting to only downloading low quality images to illustrate each podcast.
 
 ## The <dfn>NavigatorNetworkInformation</dfn> interface
 
@@ -200,12 +205,12 @@ Boolean. [[STRUCTURED-HEADERS]]
 ### The <dfn><code>sustainedSpeed</code></dfn> attribute
 
 The <a>sustainedSpeed</a> attribute, when getting, returns the
-<a>sustained connection speed</a> in <a>bit per second</a> that is determined by the user
-agent using a combination of recently observed <dfn>round trip time</dfn> and
-<dfn>downlink</dfn> values. This information is commonly known to the operating system and
-can be relayed to the user agent as is. User agents can, at their own discretion, look back at a
+<a>sustained connection speed</a> in <dfn>bit per second</dfn> that is facilitated by the user
+agent. This information is commonly known to the operating system and
+can be relayed to the user agent as is. User agents may, at their own discretion, look back at a
 sliding window of recent observations and put the observed connection speeds in buckets of
 exponentially growing size of bits per second ranges.
+User agents with a special focus on privacy can report the sustained connection speed as `Infinity`.
 
 #### The <code><dfn>Sec-CH-Sustained-Speed</dfn></code> request header field
 
