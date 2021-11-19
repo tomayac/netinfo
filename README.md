@@ -73,6 +73,10 @@ disables features like syncing or automatic updates.
 
   <img src="android_metered.png" alt="Android network settings with the 'Network usage' setting set to 'Treat as metered'." width="350" />
 
+- iOS/iPadOS Low Data Mode (["You might want to use Low Data Mode if your cellular or internet plan limits your data usage[.]"](https://support.apple.com/en-us/HT210596#:~:text=you%20might%20want%20to%20use%20low%20data%20mode%20if%20your%20cellular%20or%20internet%20plan%20limits%20your%20data%20usage))
+
+  <img src="ios-low-data.png" alt="iOS network settings with the 'Low Data Mode' switch toggled." width="350" />
+
 ### Network statistics
 
 Operating systems like Windows or macOS make realtime network statistics available in their _Task
