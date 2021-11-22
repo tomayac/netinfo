@@ -93,6 +93,19 @@ exponentially growing size of bit per second ranges.
 
   <img src="activity_monitor.png" alt="Activity Monitor on macOS." width="700" />
 
+- The macOS `networkQuality` tool:
+
+  ```bash
+  $ networkQuality
+
+  ==== SUMMARY ====
+  Upload capacity: 11.102 Mbps
+  Download capacity: 51.989 Mbps
+  Upload flows: 12
+  Download flows: 12
+  Responsiveness: High (1666 RPM)
+  ```
+
 - The `nettop` tool:
 
   <img src="nettop.png" alt="nettop on the macOS command line." width="700" />
